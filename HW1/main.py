@@ -12,5 +12,10 @@ while line:
     Ys.append(y)
     line = file.readline()
 
+plt.subplot(2, 1, 1)
+plt.title("LSE")
+plt.scatter(Xs, Ys, color='red', s=10)
+plt.subplot(2, 1, 2)
+plt.title("Newton's method")
 plt.scatter(Xs, Ys, color='red', s=10)
 plt.show()
