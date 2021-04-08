@@ -89,7 +89,6 @@ def Continue(labels, data):
 @nb.njit()
 def test(mode, labels, data):
     err = 0.
-    # result = ""
 
     posterior = np.zeros((len(labels), 10))
     predictions = np.zeros(len(labels))
