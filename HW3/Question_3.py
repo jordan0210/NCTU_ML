@@ -30,8 +30,8 @@ def drawPlot(axs, title, W_GT, var, a, points):
             X = np.zeros((1, len(W_GT)))
             for j in range(len(W_GT)):
                 X[0][j] = Xs[i] ** j
-            Ys_upper[i] = Ys[i] + 1/a + X.dot(var).dot(X.T).item()
-            Ys_lower[i] = Ys[i] - 1/a - X.dot(var).dot(X.T).item()
+            Ys_upper[i] = Ys[i] + a + X.dot(var).dot(X.T).item()
+            Ys_lower[i] = Ys[i] - a - X.dot(var).dot(X.T).item()
         axs.plot(Xs, Ys_upper, color='r')
         axs.plot(Xs, Ys_lower, color='r')
 
@@ -53,6 +53,7 @@ if __name__ == "__main__":
     predic_mean = 0.
     predic_var = 0.
     err = 1
+    count = 0
 
     f, axs = pyplot.subplots(2, 2, figsize=(10, 10))
     drawPlot(axs[0][0], "Ground truth", W_GT, var, a, points)
@@ -60,6 +61,7 @@ if __name__ == "__main__":
     while err > 1e-8:
         newPoint = Gen.Linear(basis, a, W_GT.T[0])
         points.append(newPoint)
+        count += 1
         result.write(f"Add data point {newPoint}\n\n")
 
         X = np.zeros((1, basis))
@@ -72,7 +74,7 @@ if __name__ == "__main__":
         u = inverse(C).dot(a * Y * X.T + S.dot(mean))
 
         new_mean = X.dot(u).item()
-        new_var = 1/a + X.dot(inverse(C)).dot(X.T).item()
+        new_var = a + X.dot(inverse(C)).dot(X.T).item()
         err = abs(new_var - predic_var)
         predic_mean = new_mean
         predic_var = new_var
@@ -81,9 +83,9 @@ if __name__ == "__main__":
         var = inverse(C)
 
         # Output: draw plot and print result
-        if len(points) == 10:
+        if count == 10:
             drawPlot(axs[1][0], "After 10 incomes", mean, var, a, points)
-        elif len(points) == 50:
+        elif count == 50:
             drawPlot(axs[1][1], "After 50 incomes", mean, var, a, points)
 
         result.write("Posterior mean:\n")
