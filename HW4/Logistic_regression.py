@@ -35,17 +35,22 @@ def Gradient_descent(X, labels, learning_rate):
     W = np.random.rand(3, 1)
     dW = np.ones((3, 1))
 
+    count = 0
     while (np.linalg.norm(dW) > 1e-2):
+        count+=1
         dW = X.T @ (labels - 1 / (1 + np.exp(-X @ W)))
         W = W + learning_rate * dW
-
+        if count == 10000:
+            break
     return W
 
 def Newton(X, labels, learning_rate):
     W = np.random.rand(3, 1)
     dW = np.ones((3, 1))
 
+    count = 0
     while (np.linalg.norm(dW) > 1e-2):
+        count+=1
         gradient = X.T @ (labels - 1 / (1 + np.exp(-X @ W)))
         try:
             parameter = (np.exp(-X @ W) / ((1 + np.exp(-X @ W))**2)).reshape(X.shape[0])
@@ -55,6 +60,9 @@ def Newton(X, labels, learning_rate):
         except np.linalg.LinAlgError:
             dW = gradient
         W = W + learning_rate * dW
+
+        if count == 10000:
+            break
 
     return W
 
@@ -70,6 +78,7 @@ def doPredict(W, points):
     return np.array([predict], dtype=int).T
 
 if __name__ == "__main__":
+    learning_rate = float(input("learning rate = "))
     N = int(input("number of data points = "))
     mx = [float(input("mx1 = ")), float(input("mx2 = "))]
     my = [float(input("my1 = ")), float(input("my2 = "))]
@@ -90,12 +99,12 @@ if __name__ == "__main__":
     f, axs = pyplot.subplots(1, 3, figsize=(10, 10))
     drawPlot(axs[0], "Ground truth", 2*N, points, labels.flatten())
 
-    W = Gradient_descent(X, labels, 0.01)
+    W = Gradient_descent(X, labels, learning_rate)
     predict = doPredict(W, points)
     printResult(W.flatten(), labels.flatten(), predict.flatten())
     drawPlot(axs[1], "Gradient descent", 2*N, points, predict.flatten())
 
-    W = Newton(X, labels, 0.01)
+    W = Newton(X, labels, learning_rate)
     predict = doPredict(W, points)
     printResult(W.flatten(), labels.flatten(), predict.flatten())
     drawPlot(axs[2], "Newton's method", 2*N, points, predict.flatten())

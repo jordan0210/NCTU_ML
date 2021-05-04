@@ -31,10 +31,9 @@ def EM(N, data):
     dC = 100
     dP = 100
     count = 0
-    while (dC >= 0.01) & (dP > 0.01):
+    while (dC >= 0.01) & (dP >= 0.01):
         count += 1
         w = E_step(N, C, P, data)
-        print(np.argmax(w[0]))
         C_new, P_new = M_step(N, C, P, w, data)
         dC = np.linalg.norm(C - C_new)
         dP = np.linalg.norm(P - P_new)
@@ -117,12 +116,10 @@ def mappingLabel(predict, label):
             table[label[index]] = predict[index]
         index += 1
         if (index >= 60000):
-            print(table)
             for i in range(10):
                 if (inarray(table, i) == -1):
                     table[inarray(table, -1)] = i
             break
-    print(table)
     return table
 
 def inarray(table, value):
@@ -166,15 +163,13 @@ if __name__ == "__main__":
     print("Loading...")
     N, label, data = Load()
 
-    for i in range(10):
-        print(f"Round {i+1}:")
-        # EM algorithm
-        print("EM...")
-        C, P, result, count= EM(N, data)
+    # EM algorithm
+    print("EM...")
+    C, P, result, count= EM(N, data)
 
-        # Test
-        print("Testing...")
-        result += Test(N, C, P, data, label, count)
+    # Test
+    print("Testing...")
+    result += Test(N, C, P, data, label, count)
 
-        resultFile = open(F"result{i}.txt", 'w')
-        resultFile.write(result)
+    resultFile = open(f"result.txt", 'w')
+    resultFile.write(result)
