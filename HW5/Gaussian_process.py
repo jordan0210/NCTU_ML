@@ -14,6 +14,7 @@ def load(filename):
 def drawPlot(axs, title, points, C, beta, sigma, alpha, l):
     axs.set_title(title)
     axs.set_xlim(-60, 60)
+    axs.set_ylim(-5, 4)
 
     Xs = np.linspace(-60, 60, 1000)
     Ys_mean = np.zeros(1000)
@@ -54,7 +55,7 @@ if __name__ == "__main__":
 
     beta = 5
     sigma = 1
-    alpha = 1
+    alpha = 2
     l = 1
 
     C = Gaussian(points, beta, sigma, alpha, l)
@@ -66,9 +67,9 @@ if __name__ == "__main__":
     alpha_opt = opt.x[1]
     l_opt = opt.x[2]
 
-    C_opt = Gaussian(points, beta, sigma, alpha, l)
+    C_opt = Gaussian(points, beta, sigma_opt, alpha_opt, l_opt)
 
     f, axs = pyplot.subplots(1, 2, figsize=(10, 5))
     drawPlot(axs[0], "normal" + "\n" + f"sigma = {sigma:.2f}, alpha = {alpha:.2f}, l = {l:.2f}", points, C, beta, sigma, alpha, l)
-    drawPlot(axs[1], "optimize" + "\n" + f"sigma = {sigma_opt:.2f}, alpha = {alpha_opt:.2f}, l = {l_opt:.2f}", points, C, beta, sigma_opt, alpha_opt, l_opt)
+    drawPlot(axs[1], "optimize" + "\n" + f"sigma = {sigma_opt:.2f}, alpha = {alpha_opt:.2f}, l = {l_opt:.2f}", points, C_opt, beta, sigma_opt, alpha_opt, l_opt)
     pyplot.show()
